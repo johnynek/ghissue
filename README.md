@@ -2,9 +2,10 @@
 Command-line Github issues client. This is super early, and just posting for help from friends.
 
 ## Running
-
+```
 stack build
 stack exec ghissue-exe show
+```
 
 ## Configuring
 
