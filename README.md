@@ -20,7 +20,7 @@ auth string and save it into that file.
 
 ### show
 
-`ghissues show 90-200,619` pointing at the `twitter/summingbird` repo might return:
+`ghissues show 90-200` pointing at the `twitter/summingbird` repo might return:
 
 ```
 190	Add regression tests for BatchID off-by-one bugs discovered.	
