@@ -11,6 +11,11 @@ stack install
 This will install `ghissue-exe` into your `~/.local/bin` which should be in your path after stack is
 installed.
 
+You can run without installing using stack:
+```
+stack exec ghissue-exe command -- <non-stack options after the -->
+```
+
 ## Configuring
 
 This is currently done by having a file ".ghissue.config" in the current directory
@@ -27,7 +32,7 @@ command has its own help, e.g. `ghissue-exe show --help`.
 
 ### show
 
-`ghissue show 90-200` pointing at the `twitter/summingbird` repo might return:
+`ghissue-exe show 90-200` pointing at the `twitter/summingbird` repo might return:
 
 ```
 190	Add regression tests for BatchID off-by-one bugs discovered.	
@@ -52,8 +57,8 @@ command has its own help, e.g. `ghissue-exe show --help`.
 ### new
 Create a new issue
 
-### open
-Open an issue in the web browser (currently only works if you have a shell command called `open` in
+### visit
+Visit an issue in the web browser (currently only works if you have a shell command called `open` in
 path that opens your browser, as OSX would do).
 
 ### close

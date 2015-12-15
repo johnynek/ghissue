@@ -29,7 +29,7 @@ library
                     ,  Ghissue.Command.New
                     ,  Ghissue.Command.Close
                     ,  Ghissue.Command.Label
-                    ,  Ghissue.Command.Open
+                    ,  Ghissue.Command.Visit
 
 executable ghissue-exe
   hs-source-dirs:      app
