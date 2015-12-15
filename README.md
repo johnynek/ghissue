@@ -2,10 +2,14 @@
 Command-line Github issues client. This is super early, and just posting for help from friends.
 
 ## Running
+You need to [install stack](http://docs.haskellstack.org/en/stable/README.html#how-to-install) the
+haskell build tool.
 ```
 stack build
-stack exec ghissue-exe show
+stack install
 ```
+This will install `ghissue-exe` into your `~/.local/bin` which should be in your path after stack is
+installed.
 
 ## Configuring
 
@@ -18,10 +22,12 @@ To get an oauth string, go to https://github.com/settings/tokens and create a ne
 auth string and save it into that file.
 
 ## Usage
+`ghissue-exe --help` should give you help after you set up the configuration file. Each
+command has its own help, e.g. `ghissue-exe show --help`.
 
 ### show
 
-`ghissues show 90-200` pointing at the `twitter/summingbird` repo might return:
+`ghissue show 90-200` pointing at the `twitter/summingbird` repo might return:
 
 ```
 190	Add regression tests for BatchID off-by-one bugs discovered.	
@@ -42,3 +48,16 @@ auth string and save it into that file.
 92	Use TemplateTap to write distinct batches	scalding
 91	Don't Load unnecessary data in BatchedLookup	scalding
 ```
+
+### new
+Create a new issue
+
+### open
+Open an issue in the web browser (currently only works if you have a shell command called `open` in
+path that opens your browser, as OSX would do).
+
+### close
+Close an existing issue
+
+### label
+Attach labels to issues
