@@ -9,7 +9,8 @@ module Ghissue (
   contains,
   listContains,
   issuesReadM,
-  readConfig
+  readConfig,
+  urlForIssue
 ) where
 
 import Data.Char(isSpace)
@@ -128,3 +129,7 @@ toAction conf commands = let
   in do
     action <- execParser (info subc idm)
     action
+
+urlForIssue :: Config -> Int -> String
+urlForIssue Config { configGithubOrg = org, configRepo = repo } id =
+  "https://github.com/" ++ org ++ "/" ++ repo ++ "/issues/" ++ (show id)

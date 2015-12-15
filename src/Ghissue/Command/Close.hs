@@ -2,6 +2,7 @@ module Ghissue.Command.Close (
   closeCommand
 ) where
 
+import Control.Monad(sequence_)
 import Ghissue
 import Github.Auth(GithubAuth(..))
 import Github.Data.Definitions(EditIssue(..))
@@ -17,19 +18,25 @@ closeCommand = Command { commandName = "close"
                        , commandParser = closeParser
                        , commandAction = closeAction }
 
-closeParser :: Parser (Int, EditIssue)
+closed = EditIssue Nothing Nothing Nothing (Just "closed") Nothing Nothing
+
+closeParser :: Parser [Int]
 closeParser = let
-  issue = (argument auto (metavar "ISSUE") :: Parser Int)
-  closed = EditIssue Nothing Nothing Nothing (Just "closed") Nothing Nothing
-  in (\id -> (id, closed)) <$> issue
+  issues = argument issuesReadM (metavar "ISSUES")
+  in allIssues <$> issues
 
-printClose issue = putStrLn (show issue)
+printClose conf issue = do
+  let isnum = issueNumber issue
+  let url = urlForIssue conf isnum
+  putStrLn ("closed: " ++ (show isnum) ++ ", at: " ++ url)
 
-closeAction :: Config -> (Int, EditIssue) -> IO ()
-closeAction conf (id, ei) = do
-  let auth = GithubOAuth (configAuth conf)
-  let org = configGithubOrg conf
-  let repo = configRepo conf
-  eitherErrIssue <- editIssue auth org repo id ei
-  case eitherErrIssue of Left err -> fail (show err)
-                         Right issue -> printClose issue
+closeAction :: Config -> [Int] -> IO ()
+closeAction conf ids = let
+  auth = GithubOAuth (configAuth conf)
+  org = configGithubOrg conf
+  repo = configRepo conf
+  close id = do
+    eitherErrIssue <- editIssue auth org repo id closed
+    case eitherErrIssue of Left err -> fail (show err)
+                           Right issue -> printClose conf issue
+  in sequence_ (map close ids)

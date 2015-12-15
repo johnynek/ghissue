@@ -46,9 +46,7 @@ withBody ni = do
 
 printIssue conf issue = do
   let isnum = issueNumber issue
-  let org = configGithubOrg conf
-  let repo = configRepo conf
-  let url = "https://github.com/" ++ org ++ "/" ++ repo ++ "/issues/" ++ (show isnum)
+  let url = urlForIssue conf isnum
   putStrLn ("created: " ++ (show isnum) ++ ", at: " ++ url)
 
 newAction :: Config -> NewIssue -> IO ()
