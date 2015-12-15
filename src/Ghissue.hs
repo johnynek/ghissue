@@ -28,11 +28,30 @@ allIssues irs = let
   toList (InclusiveRange s e) = [s..e]
   in concatMap toList irs
 
+{-| Does an an IssueRange contain an issue
+  >>> contains 1 (Issue 1)
+  True
+  >>> contains 1 (Issue 2)
+  False
+  >>> contains 1 (InclusiveRange 1 3)
+  True
+  >>> contains 3 (InclusiveRange 1 3)
+  True
+  >>> contains 4 (InclusiveRange 1 3)
+  False
+ -}
 contains :: Int -> IssueRange -> Bool
 contains x (Issue y) = x == y
 contains x (InclusiveRange l u) = (l <= x) && (x <= u)
 
+{-|Test an issue against a list of ranges. Empty list contains all
+  >>> listContains 1 []
+  True
+  >>> listContains 2 [Issue 1]
+  False
+-}
 listContains :: Int -> [IssueRange] -> Bool
+listContains _ [] = True
 listContains x irs = or (map (contains x) irs)
 
 {-
