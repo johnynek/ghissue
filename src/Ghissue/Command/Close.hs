@@ -14,7 +14,7 @@ import Options.Applicative
 
 closeCommand :: Command
 closeCommand = Command { commandName = "close"
-                       , commandDesc = "close an issue"
+                       , commandDesc = "Close one or more issues"
                        , commandParser = closeParser
                        , commandAction = closeAction }
 
@@ -22,7 +22,7 @@ closed = EditIssue Nothing Nothing Nothing (Just "closed") Nothing Nothing
 
 closeParser :: Parser [Int]
 closeParser = let
-  issues = argument issuesReadM (metavar "ISSUES")
+  issues = argument issuesReadM (metavar "ISSUES" <> help "issues to close, e.g. 1-2,4-5,8")
   in allIssues <$> issues
 
 printClose conf issue = do

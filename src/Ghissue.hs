@@ -116,8 +116,8 @@ data Command = forall a . Command {
 -}
 subcom conf Command { commandName = name, commandDesc = desc, commandParser = parser, commandAction = act } = let
   toAct = act conf
-  actionParser = toAct <$> parser
-  in command name (info actionParser (progDesc desc))
+  actionParser = helper <*> (toAct <$> parser)
+  in command name (info actionParser (progDesc desc <> header desc))
 
 {-
   Called by the main function to run one of the commands
@@ -127,7 +127,7 @@ toAction conf commands = let
   subcommands = map (subcom conf) commands
   subc = subparser (mconcat subcommands)
   in do
-    action <- execParser (info subc idm)
+    action <- execParser (info (helper <*> subc) (fullDesc <> header "ghissue: a command line github issues tool"))
     action
 
 urlForIssue :: Config -> Int -> String

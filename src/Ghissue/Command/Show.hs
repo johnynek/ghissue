@@ -27,7 +27,7 @@ showCommand = Command { commandName = "show"
                       , commandAction = showAction }
 
 showParser = let
-  issueP = argument issuesReadM (metavar "ISSUES")
+  issueP = argument issuesReadM (metavar "ISSUES" <> help "issues to show, e.g. 1-2,4-5,8")
   labelP = strOption (long "label" <> short 'l' <> metavar "LABEL" <> help "labels which must be attached")
   in ShowArgs <$> (concat <$> (many issueP)) <*> (many labelP)
 

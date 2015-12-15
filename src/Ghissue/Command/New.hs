@@ -13,7 +13,7 @@ import Options.Applicative
 
 newCommand :: Command
 newCommand = Command { commandName = "new"
-                      , commandDesc = "create a new issue"
+                      , commandDesc = "Create a new issue"
                       , commandParser = newParser
                       , commandAction = newAction }
 
