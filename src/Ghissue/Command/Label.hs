@@ -3,7 +3,7 @@ module Ghissue.Command.Label (
 ) where
 
 import Control.Monad(sequence_)
-import Data.List(union)
+import Data.List(union, (\\))
 import Data.Either(either)
 import Ghissue
 import Github.Auth(GithubAuth(..))
@@ -24,11 +24,16 @@ labels labs = EditIssue Nothing Nothing Nothing Nothing Nothing (Just labs)
 
 zipA a b = (,) <$> a <*> b
 
-labelParser :: Parser ([IssueRange], [String])
+data LabelArg = LabelArg { laRange :: [IssueRange]
+                         , laLabels :: [String]
+                         , laRemove :: Bool }
+
+labelParser :: Parser LabelArg
 labelParser = let
   issues = argument issuesReadM (metavar "ISSUES" <> help "issues to label, e.g. 1-2,4-5,8")
   labels = some (strOption (long "label" <> short 'l' <> metavar "LABEL" <> help "labels to add"))
-  in zipA issues labels
+  remove = switch (long "remove" <> short 'r' <> help "if set, remove labels")
+  in LabelArg <$> issues <*> labels <*> remove
 
 printLabel conf issue = do
   let isnum = issueNumber issue
@@ -38,14 +43,17 @@ printLabel conf issue = do
 failOnLeft :: (Show a, Monad m) => Either a b -> (b -> m c) -> m c
 failOnLeft ethr fn = either (fail . show) fn ethr
 
-labelAction :: Config -> ([IssueRange], [String]) -> IO ()
-labelAction conf (irange, labs) = let
+labelAction :: Config -> LabelArg -> IO ()
+labelAction conf LabelArg { laRange = irange, laLabels = labs, laRemove = remove } = let
   auth = GithubOAuth (configAuth conf)
   org = configGithubOrg conf
   repo = configRepo conf
   ids = allIssues irange
   -- the new labels should be the union of old and new
-  newLabels issue = union (map labelName (issueLabels issue)) labs
+  newLabels issue =
+    if remove
+    then (map labelName (issueLabels issue)) \\ labs
+    else union (map labelName (issueLabels issue)) labs
   setLabels issue = let
     issueN = issueNumber issue
     newLs = newLabels issue
