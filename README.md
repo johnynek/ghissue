@@ -18,8 +18,8 @@ stack exec ghissue-exe command -- <non-stack options after the -->
 
 ## Configuring
 
-This is currently done by having a file ".ghissue.config" in the current directory
-with one line of the format:
+This is currently done by having a file "ghissue.conf" in the `.git` directory for the
+current project which contains one line of the format:
 ```
 oauthstring githuborg repo
 ```
