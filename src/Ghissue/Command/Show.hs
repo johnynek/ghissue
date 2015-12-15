@@ -3,6 +3,7 @@ module Ghissue.Command.Show (
 ) where
 
 import Data.List(intercalate, sort)
+import Data.Time.LocalTime(getCurrentTimeZone, utcToLocalTime)
 import Ghissue
 import Github.Auth(GithubAuth(..))
 import Github.Data.Definitions(Issue
@@ -10,7 +11,8 @@ import Github.Data.Definitions(Issue
                               , issueNumber
                               , issueTitle
                               , issueLabels
-                              , labelName)
+                              , labelName
+                              , GithubDate(fromGithubDate))
 import Github.Issues
 import Options.Applicative
 {-
@@ -31,33 +33,23 @@ showParser = let
   labelP = strOption (long "label" <> short 'l' <> metavar "LABEL" <> help "labels which must be attached")
   in ShowArgs <$> (concat <$> (many issueP)) <*> (many labelP)
 
-{-
-  This is the one-line summary of issues that we print when doing a full listing
--}
-data LineSummary = LineSummary { lsNum :: Int
-                               , lsTitle :: String
-                               , lsLabels :: [String] }
-
-instance Show LineSummary where
-  show ls = let
-    num = show (lsNum ls)
-    title = lsTitle ls
-    labs = intercalate ", " (lsLabels ls)
-    in intercalate "\t" [num, title, labs]
-
-toLineSummary :: Issue -> LineSummary
+toLineSummary :: Issue -> IO String
 toLineSummary issue = let
-  num = issueNumber issue
+  num = show $ issueNumber issue
   title = issueTitle issue
-  labs = sort $ map labelName (issueLabels issue)
-  in LineSummary num title labs
+  labs = intercalate "," (sort $ map labelName (issueLabels issue))
+  commentCount = show (issueComments issue)
+  updated = fromGithubDate (issueUpdatedAt issue)
+  in do
+    tz <- getCurrentTimeZone
+    let local = show (utcToLocalTime tz updated)
+    return (intercalate "\t" [num, title, local, commentCount, labs])
 
 printResults :: ShowArgs -> [Issue] -> IO ()
 printResults sargs issues = do
-  let lineSummaries = map toLineSummary issues
-  let matching = filter (\ls -> listContains (lsNum ls) (showArgsIssues sargs)) lineSummaries
-  sequence_ (map (putStrLn . show) matching)
-
+  let matching = filter (\ls -> listContains (issueNumber ls) (showArgsIssues sargs)) issues
+  let lineSummaries = map toLineSummary matching
+  sequence_ (map (\m -> m >>= putStrLn) lineSummaries)
 
 showAction :: Config -> ShowArgs -> IO ()
 showAction conf sargs = do
