@@ -44,8 +44,12 @@ withBody ni = do
   body <- getContents
   return (ni { newIssueBody = Just body })
 
-printIssue issue = do
-  putStrLn (show issue)
+printIssue conf issue = do
+  let isnum = issueNumber issue
+  let org = configGithubOrg conf
+  let repo = configRepo conf
+  let url = "https://github.com/" ++ org ++ "/" ++ repo ++ "/issues/" ++ (show isnum)
+  putStrLn ("created: " ++ (show isnum) ++ ", at: " ++ url)
 
 newAction :: Config -> NewIssue -> IO ()
 newAction conf ni = do
@@ -55,4 +59,4 @@ newAction conf ni = do
   nibody <- withBody ni
   eitherErrIssues <- createIssue auth org repo nibody
   case eitherErrIssues of Left err -> fail (show err)
-                          Right issue -> printIssue issue
+                          Right issue -> printIssue conf issue
