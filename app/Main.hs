@@ -7,9 +7,10 @@ import Ghissue
 import Ghissue.Command.Show
 import Ghissue.Command.New
 import Ghissue.Command.Close
+import Ghissue.Command.Label
 
 commands :: [Command]
-commands = [showCommand, newCommand, closeCommand]
+commands = [showCommand, newCommand, closeCommand, labelCommand]
 
 main :: IO ()
 main = do
