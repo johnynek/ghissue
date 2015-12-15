@@ -4,11 +4,12 @@ import Control.Monad(sequence_)
 import Github.Auth
 import Github.Issues
 import Ghissue
-import Ghissue.Command.Show(showCommand)
-import Ghissue.Command.New(newCommand)
+import Ghissue.Command.Show
+import Ghissue.Command.New
+import Ghissue.Command.Close
 
 commands :: [Command]
-commands = [showCommand, newCommand]
+commands = [showCommand, newCommand, closeCommand]
 
 main :: IO ()
 main = do
