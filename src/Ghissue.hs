@@ -1,4 +1,5 @@
 {-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Ghissue (
   IssueRange(Issue, InclusiveRange),
@@ -16,10 +17,13 @@ module Ghissue (
 import Data.Char(isSpace)
 import Data.List(concatMap)
 import Data.List.Split(splitOn)
+import Data.Text(unpack)
 import Options.Applicative
 import Options.Applicative.Types
 import Control.Monad.Except
 import Control.Monad.Reader
+import Filesystem.Path(parent)
+import qualified Turtle as T
 
 data IssueRange = Issue Int | InclusiveRange Int Int
 
@@ -91,15 +95,28 @@ parseRange range = let
 -}
 data Config = Config { configAuth :: String, configGithubOrg :: String, configRepo :: String }
 
-{-
- TODO this should look towards root for .git folder, then find the ghissues.conf in there
--}
+findGit :: T.FilePath -> IO (Maybe T.FilePath)
+findGit init = do
+  let here = init T.</> ".git"
+  gitDir <- T.testdir here
+  case gitDir of True  -> return (Just here)
+                 False -> let p = parent init
+                          in if p == init then return Nothing else findGit p
+
 readConfig :: IO Config
 readConfig = do
-  conf <- readFile ".ghissue.config"
-  let [auth, org, repo'] = splitOn " " conf
-  let repo = reverse (dropWhile isSpace (reverse repo'))
-  return (Config auth org repo)
+  initd <- T.pwd
+  mdir <- findGit initd
+  case mdir of (Just dir) -> do
+                               let path = dir T.</> "ghissue.conf"
+                               conf <- T.strict (T.input path)
+                               let [auth, org, repo'] = splitOn " " (unpack conf)
+                               let repo = reverse (dropWhile isSpace (reverse repo'))
+                               return (Config auth org repo)
+
+               Nothing -> fail ("You must be in a subdirectory of a git repo to run this tool,\n" <>
+                                "with a file at .git/ghissue.conf containing\n" <>
+                                "\"token org repo\" where token is from: https://github.com/settings/tokens")
 
 {-
  This is the struture we fit each subcommand into
