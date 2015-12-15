@@ -5,9 +5,10 @@ import Github.Auth
 import Github.Issues
 import Ghissue
 import Ghissue.Command.Show(showCommand)
+import Ghissue.Command.New(newCommand)
 
 commands :: [Command]
-commands = [showCommand]
+commands = [showCommand, newCommand]
 
 main :: IO ()
 main = do

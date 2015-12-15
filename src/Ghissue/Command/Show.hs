@@ -16,10 +16,9 @@ import Options.Applicative
 {-
   ghissue show 1,3 --label foo
 -}
-data ShowArgs = ShowArgs {
-  showArgsIssues :: [IssueRange],
-  showArgsLabel :: [String]
-}
+data ShowArgs = ShowArgs { showArgsIssues :: [IssueRange]
+                         , showArgsLabel :: [String]
+                         }
 
 showCommand :: Command
 showCommand = Command { commandName = "show"
@@ -35,10 +34,9 @@ showParser = let
 {-
   This is the one-line summary of issues that we print when doing a full listing
 -}
-data LineSummary = LineSummary {
-  lsNum :: Int
-  , lsTitle :: String
-  , lsLabels :: [String] }
+data LineSummary = LineSummary { lsNum :: Int
+                               , lsTitle :: String
+                               , lsLabels :: [String] }
 
 instance Show LineSummary where
   show ls = let
@@ -54,12 +52,19 @@ toLineSummary issue = let
   labs = sort $ map labelName (issueLabels issue)
   in LineSummary num title labs
 
+printResults :: ShowArgs -> [Issue] -> IO ()
+printResults sargs issues = do
+  let lineSummaries = map toLineSummary issues
+  let matching = filter (\ls -> listContains (lsNum ls) (showArgsIssues sargs)) lineSummaries
+  sequence_ (map (putStrLn . show) matching)
+
+
 showAction :: Config -> ShowArgs -> IO ()
 showAction conf sargs = do
   let auth = GithubOAuth (configAuth conf)
   let org = configGithubOrg conf
   let repo = configRepo conf
-  Right issues <- issuesForRepo' (Just auth) org repo []
-  let lineSummaries = map toLineSummary issues
-  let matching = filter (\ls -> listContains (lsNum ls) (showArgsIssues sargs)) lineSummaries
-  sequence_ (map (putStrLn . show) matching)
+  let limit = Labels (showArgsLabel sargs)
+  eitherErrIssues <- issuesForRepo' (Just auth) org repo [limit]
+  case eitherErrIssues of Left err -> fail (show err)
+                          Right issues -> printResults sargs issues

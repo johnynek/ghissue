@@ -33,7 +33,7 @@ contains x (Issue y) = x == y
 contains x (InclusiveRange l u) = (l <= x) && (x <= u)
 
 listContains :: Int -> [IssueRange] -> Bool
-listContains x irs = and (map (contains x) irs)
+listContains x irs = or (map (contains x) irs)
 
 {-
   Read an list of IssueRanges
