@@ -33,6 +33,7 @@ Available commands:
   visit                    Visit an issue in your default web browser
   comment                  Attach a comment to a given issue. If no --body is
                            given stdin is used
+  assign                   Assign one or more issues to a given user
 ```
 
 ## Configuring

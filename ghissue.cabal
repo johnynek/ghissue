@@ -27,11 +27,12 @@ library
                      , text >= 1.2.0.0
                      , time >= 1.5.0.0
   default-language:    Haskell2010
-  other-modules:       Ghissue.Command.Show
-                    ,  Ghissue.Command.New
+  other-modules:       Ghissue.Command.Assign
                     ,  Ghissue.Command.Close
                     ,  Ghissue.Command.Comment
                     ,  Ghissue.Command.Label
+                    ,  Ghissue.Command.New
+                    ,  Ghissue.Command.Show
                     ,  Ghissue.Command.Visit
 
 executable ghissue-exe

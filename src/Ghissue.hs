@@ -16,7 +16,7 @@ module Ghissue (
 ) where
 
 import Data.Char(isSpace)
-import Data.List(concatMap)
+import Data.List(concatMap, nub)
 import Data.List.Split(splitOn)
 import Data.Text(unpack)
 import Options.Applicative
@@ -32,7 +32,7 @@ allIssues :: [IssueRange] -> [Int]
 allIssues irs = let
   toList (Issue i) = [i]
   toList (InclusiveRange s e) = [s..e]
-  in concatMap toList irs
+  in nub (concatMap toList irs)
 
 {-| Does an an IssueRange contain an issue
   >>> contains 1 (Issue 1)
