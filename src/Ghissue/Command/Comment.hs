@@ -10,7 +10,7 @@ import Options.Applicative
 
 commentCommand :: Command
 commentCommand = Command { commandName = "comment"
-                         , commandDesc = "Attach a comment to a given issue. If no --body is given, stdin is used"
+                         , commandDesc = "Attach a comment to a given issue. If no --body is given stdin is used"
                          , commandParser = commentParser
                          , commandAction = commentAction }
 

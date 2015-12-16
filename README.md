@@ -16,6 +16,25 @@ You can run without installing using stack:
 stack exec ghissue-exe command -- <non-stack options after the -->
 ```
 
+```
+ghissue: a command line github issues tool
+
+Usage: ghissue-exe COMMAND
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  show                     Show issues
+  new                      Create a new issue. If no --body is given stdin is
+                           used.
+  close                    Close one or more issues
+  label                    Label one or more issues
+  visit                    Visit an issue in your default web browser
+  comment                  Attach a comment to a given issue. If no --body is
+                           given stdin is used
+```
+
 ## Configuring
 
 This is currently done by having a file "ghissue.conf" in the `.git` directory for the

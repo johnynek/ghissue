@@ -13,7 +13,7 @@ import Options.Applicative
 
 newCommand :: Command
 newCommand = Command { commandName = "new"
-                      , commandDesc = "Create a new issue"
+                      , commandDesc = "Create a new issue. If no --body is given stdin is used."
                       , commandParser = newParser
                       , commandAction = newAction }
 
