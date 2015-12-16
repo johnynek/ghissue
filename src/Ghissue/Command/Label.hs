@@ -40,8 +40,6 @@ printLabel conf issue = do
   let url = urlForIssue conf isnum
   putStrLn ("labeled: " ++ (show isnum) ++ ", at: " ++ url)
 
-failOnLeft :: (Show a, Monad m) => Either a b -> (b -> m c) -> m c
-failOnLeft ethr fn = either (fail . show) fn ethr
 
 labelAction :: Config -> LabelArg -> IO ()
 labelAction conf LabelArg { laRange = irange, laLabels = labs, laRemove = remove } = let

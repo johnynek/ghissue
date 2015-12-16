@@ -6,6 +6,7 @@ import Ghissue.Command.New
 import Ghissue.Command.Close
 import Ghissue.Command.Label
 import Ghissue.Command.Visit
+import Ghissue.Command.Comment
 
 allCommands :: [Command]
-allCommands = [showCommand, newCommand, closeCommand, labelCommand, visitCommand]
+allCommands = [showCommand, newCommand, closeCommand, labelCommand, visitCommand, commentCommand]

@@ -5,12 +5,13 @@ module Ghissue (
   IssueRange(Issue, InclusiveRange),
   Config(..),
   Command(..),
-  toAction,
   allIssues,
   contains,
-  listContains,
+  failOnLeft,
   issuesReadM,
+  listContains,
   readConfig,
+  toAction,
   urlForIssue
 ) where
 
@@ -58,6 +59,9 @@ contains x (InclusiveRange l u) = (l <= x) && (x <= u)
 listContains :: Int -> [IssueRange] -> Bool
 listContains _ [] = True
 listContains x irs = or (map (contains x) irs)
+
+failOnLeft :: (Show a, Monad m) => Either a b -> (b -> m c) -> m c
+failOnLeft ethr fn = either (fail . show) fn ethr
 
 {-
   Read an list of IssueRanges

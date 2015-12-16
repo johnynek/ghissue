@@ -30,6 +30,7 @@ library
   other-modules:       Ghissue.Command.Show
                     ,  Ghissue.Command.New
                     ,  Ghissue.Command.Close
+                    ,  Ghissue.Command.Comment
                     ,  Ghissue.Command.Label
                     ,  Ghissue.Command.Visit
 
