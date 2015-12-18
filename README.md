@@ -1,5 +1,5 @@
 # ghissue
-Command-line Github issues client. This is super early, and just posting for help from friends.
+Command-line Github issues client.
 
 ## Running
 You need to [install stack](http://docs.haskellstack.org/en/stable/README.html#how-to-install) the
