@@ -43,8 +43,7 @@ current project which contains one line of the format:
 ```
 oauthstring githuborg repo
 ```
-To get an oauth string, go to https://github.com/settings/tokens and create a new token. Copy the
-auth string and save it into that file.
+To get an oauth string, go to https://github.com/settings/tokens and create a new token. (You will need to ensure the token has `repo` or `public_repo` scopes enabled, and you will also need to ensure that issues are enabled for that repository.) Copy the auth string and save it into that file.
 
 ## Usage
 `ghissue-exe --help` should give you help after you set up the configuration file. Each
