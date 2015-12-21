@@ -11,6 +11,11 @@ cache:
   - ~/.local
   - ~/.stack-work-cache
 
+addons:
+  apt:
+    packages:
+    - libgmp-dev
+
 install:
   - travis_wait stack --no-terminal --skip-ghc-check setup
   - travis_wait stack --no-terminal --skip-ghc-check test --only-snapshot
