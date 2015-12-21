@@ -4,22 +4,12 @@ before_install:
   # stack
   - mkdir -p ~/.local/bin
   - export PATH=~/.local/bin:$PATH
-  - export PATH=/opt/ghc/7.8.4/bin:$PATH
   - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 cache:
   directories:
   - ~/.stack
   - ~/.local
   - ~/.stack-work-cache
-  apt: true
-
-addons:
-  apt:
-    sources:
-    - hvr-ghc
-    packages:
-    - ghc-7.8.4
-    - libgmp-dev
 
 install:
   - travis_wait stack --no-terminal --skip-ghc-check setup
